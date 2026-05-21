@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PromptOps AI — Command Centre 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Trebuchet MS',Verdana,sans-serif;background:#F3F2FA;min-height:100vh;display:flex;flex-direction:column}
+nav{background:linear-gradient(135deg,#1E1065 0%,#4C1D95 55%,#6D28D9 100%);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:999;box-shadow:0 4px 24px rgba(76,29,149,0.5)}
+.logo-box{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#A78BFA,#7C3AED);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:#fff}
+.live-badge{padding:3px 10px;background:rgba(255,255,255,0.1);border-radius:20px;font-size:10px;color:#A7F3D0;font-weight:700;border:1px solid rgba(167,243,208,0.3);display:flex;align-items:center;gap:5px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#34D399;box-shadow:0 0 6px #34D399;display:inline-block;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{padding:7px 13px;border-radius:7px;border:none;cursor:pointer;font-weight:700;font-size:12px;background:transparent;color:#C4B5FD;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Trebuchet MS',Verdana,sans-serif}
+.nav-tab.active{background:rgba(255,255,255,0.18);color:#fff;border-bottom:2px solid #A78BFA}
+.nav-tab:hover{background:rgba(255,255,255,0.1);color:#fff}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+main{flex:1;padding:22px 26px;max-width:1480px;margin:0 auto;width:100%}
+.tab-pane{display:none;flex-direction:column;gap:14px}
+.tab-pane.active{display:flex}
+.card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(124,58,237,0.08);border:1px solid #EDE9FE}
+.card-title{font-size:13px;font-weight:800;color:#1E1B4B}
+.card-sub{font-size:11px;color:#9CA3AF;margin-top:1px}
+.card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.g2{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.g3{display:grid;gap:14px;grid-template-columns:1fr 1fr 1fr}
+.g4{display:grid;gap:14px;grid-template-columns:1fr 1fr 1fr 1fr}
+.g5{display:grid;gap:12px;grid-template-columns:repeat(5,1fr)}
+.g14{display:grid;gap:14px;grid-template-columns:1.4fr 1fr}
+.g17{display:grid;gap:14px;grid-template-columns:1.7fr 1fr}
+.g131{display:grid;gap:14px;grid-template-columns:1fr 1.3fr 1fr}
+.g113{display:grid;gap:14px;grid-template-columns:1.1fr 1fr 1.2fr}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.mbar{height:6px;background:#EDE9FE;border-radius:3px;overflow:hidden;margin:2px 0}
+.mbar-fill{height:100%;border-radius:3px}
+.hero{background:linear-gradient(135deg,#1E1065 0%,#4C1D95 45%,#7C3AED 100%);border-radius:18px;padding:24px 30px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 8px 36px rgba(124,58,237,0.35)}
+.hero h1{font-size:26px;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-0.02em}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:300px}
+.hero-tile{background:rgba(255,255,255,0.12);border-radius:10px;padding:11px 13px;border:1px solid rgba(255,255,255,0.18)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:8px 9px;text-align:left;color:#4C1D95;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:0.04em;background:#F5F3FF}
+td{padding:8px 9px}
+tr:nth-child(even){background:#FAFAFA}
+tr:nth-child(odd){background:#fff}
+tr{border-bottom:1px solid #EDE9FE}
+footer{background:linear-gradient(135deg,#0F0A29 0%,#1E1065 40%,#2E1065 70%,#4C1D95 100%);padding:30px 26px 20px;box-shadow:0 -4px 24px rgba(76,29,149,0.4)}
+.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:32px;margin-bottom:20px}
+.chart-w{position:relative;width:100%}
+.info-note{margin-top:10px;padding:9px 12px;background:#F5F3FF;border-radius:9px;font-size:12px;color:#7C3AED;font-weight:600;display:flex;align-items:center;gap:8px}
+.stat-box{padding:7px;background:#F5F3FF;border-radius:8px;text-align:center}
+.yr-btn{padding:8px 20px;border-radius:8px;border:2px solid #EDE9FE;cursor:pointer;font-weight:700;font-size:12px;background:#fff;color:#6B7280;transition:all 0.2s;font-family:'Trebuchet MS',Verdana,sans-serif}
+.yr-btn.active{border-color:#7C3AED;background:#7C3AED;color:#fff}
+.phase-card{text-align:center;padding:14px;background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-radius:12px;border:2px solid #DDD6FE}
+.phase-circle{width:52px;height:52px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px}
+.moat-card{padding:16px;background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-radius:11px;border:2px solid #DDD6FE;text-align:center}
+.quote-box{padding:9px 11px;background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-radius:9px;border-left:4px solid #7C3AED;font-size:11px;color:#6B7280;font-style:italic;line-height:1.6;margin-top:12px}
+.mobile-btn{display:none;background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:6px 12px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;font-family:'Trebuchet MS',Verdana,sans-serif}
+.mobile-menu{display:none;background:#2E1065;border-bottom:1px solid rgba(167,139,250,0.3)}
+.mobile-menu.open{display:block}
+.mobile-menu button{display:block;width:100%;padding:11px 20px;background:transparent;border:none;color:#C4B5FD;text-align:left;font-size:13px;font-weight:700;cursor:pointer;font-family:'Trebuchet MS',Verdana,sans-serif;border-bottom:1px solid rgba(167,139,250,0.1)}
+.mobile-menu button.active{background:rgba(124,58,237,0.4);color:#fff}
+.nav-right{display:flex;align-items:center;gap:10px}
+@media(max-width:900px){
+  .nav-tabs,.nav-right,.live-badge{display:none!important}
+  .mobile-btn{display:block!important}
+  main{padding:14px}
+  .hero{flex-direction:column;padding:20px 16px}
+  .hero h1{font-size:20px}
+  .hero-grid{min-width:0;width:100%;grid-template-columns:1fr 1fr}
+  .g2,.g3,.g4,.g5,.g14,.g17,.g131,.g113{grid-template-columns:1fr!important}
+  .footer-grid{grid-template-columns:1fr!important}
+  .g4-mob2{grid-template-columns:1fr 1fr!important}
+  table{min-width:460px}
+  .tbl-wrap{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo-box">P</div>
+    <div>
+      <div style="color:#fff;font-weight:900;font-size:16px;letter-spacing:-0.02em">PromptOps AI</div>
+      <div style="color:#C4B5FD;font-size:9px;letter-spacing:0.12em;text-transform:uppercase">Design · Optimize · Automate · Elevate</div>
+    </div>
+    <div class="live-badge" style="margin-left:10px"><span class="live-dot"></span>Live · 2026</div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('dashboard',this)">Dashboard</button>
+    <button class="nav-tab" onclick="switchTab('financials',this)">Financials</button>
+    <button class="nav-tab" onclick="switchTab('market',this)">Market</button>
+    <button class="nav-tab" onclick="switchTab('operations',this)">Operations</button>
+    <button class="nav-tab" onclick="switchTab('competitors',this)">Competitors</button>
+  </div>
+  <div class="nav-right">
+    <div style="text-align:right"><div style="color:#E9D5FF;font-size:11px;font-weight:700">Bathula Sai Mutya Naveen</div><div style="color:#A78BFA;font-size:10px">Founder &amp; CEO · London, UK</div></div>
+    <div class="avatar">N</div>
+  </div>
+  <button class="mobile-btn" onclick="toggleMob()">☰ Menu</button>
+</nav>
+
+<div class="mobile-menu" id="mobMenu">
+  <button class="active" onclick="switchTabMob('dashboard',this)">Dashboard</button>
+  <button onclick="switchTabMob('financials',this)">Financials</button>
+  <button onclick="switchTabMob('market',this)">Market</button>
+  <button onclick="switchTabMob('operations',this)">Operations</button>
+  <button onclick="switchTabMob('competitors',this)">Competitors</button>
+</div>
+
+<main>
+
+<!-- DASHBOARD -->
+<div id="tab-dashboard" class="tab-pane active">
+  <div class="hero">
+    <div style="max-width:440px">
+      <div style="font-size:10px;color:#C4B5FD;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px">Operational Command Centre · 2026</div>
+      <h1>Unlock the DNA of<br><span style="color:#FDE68A">High-Performing Workflows</span></h1>
+      <p style="color:#DDD6FE;font-size:12px;line-height:1.6;margin-top:10px">AI-powered behavioural intelligence. Captures and clones the hidden logic of successful AI interactions before lost to staff turnover.</p>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-tile"><div style="font-size:9px;color:#C4B5FD;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Workflows Analysed</div><div style="font-size:20px;font-weight:900;color:#fff" id="liveWF">248</div><div style="font-size:9px;color:#A7F3D0;margin-top:2px">Updated live</div></div>
+      <div class="hero-tile"><div style="font-size:9px;color:#C4B5FD;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Efficiency Gain</div><div style="font-size:20px;font-weight:900;color:#fff">34.2%</div><div style="font-size:9px;color:#A7F3D0;margin-top:2px">Updated live</div></div>
+      <div class="hero-tile"><div style="font-size:9px;color:#C4B5FD;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Time Saved</div><div style="font-size:20px;font-weight:900;color:#fff" id="liveHrs">1,256 hrs</div><div style="font-size:9px;color:#A7F3D0;margin-top:2px">Updated live</div></div>
+      <div class="hero-tile"><div style="font-size:9px;color:#C4B5FD;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Cost Savings Est.</div><div style="font-size:20px;font-weight:900;color:#fff">USD 2.48M</div><div style="font-size:9px;color:#A7F3D0;margin-top:2px">Updated live</div></div>
+    </div>
+  </div>
+
+  <div class="g5 g4-mob2">
+    <div class="card" style="text-align:center;padding:14px"><div style="font-size:24px;margin-bottom:6px">⚡</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Workflow Health</div><div style="font-size:22px;font-weight:900;color:#7C3AED">87%</div></div>
+    <div class="card" style="text-align:center;padding:14px"><div style="font-size:24px;margin-bottom:6px">🚀</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">High-Impact Automations</div><div style="font-size:22px;font-weight:900;color:#9333EA">62</div></div>
+    <div class="card" style="text-align:center;padding:14px"><div style="font-size:24px;margin-bottom:6px">🎯</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Hallucination Reduction</div><div style="font-size:22px;font-weight:900;color:#10B981">18%</div></div>
+    <div class="card" style="text-align:center;padding:14px"><div style="font-size:24px;margin-bottom:6px">⏱</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Task Speed Increase</div><div style="font-size:22px;font-weight:900;color:#F59E0B">28%</div></div>
+    <div class="card" style="text-align:center;padding:14px"><div style="font-size:24px;margin-bottom:6px">🧠</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Logic Equity Score</div><div style="font-size:22px;font-weight:900;color:#3B82F6">4.3/5</div></div>
+  </div>
+
+  <div class="g14">
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">PFFE — Live Forensic Alert Feed</div><div class="card-sub">Real-time hallucination, context drift and logic break detection</div></div><span class="tag" style="background:#EF444422;color:#EF4444;border:1px solid #EF444433">2 Active</span></div>
+      <div id="alerts-list"></div>
+      <div class="info-note">✓ PFFE auto-corrected 44 quiet failures this week · Eliminating 84% manual checking</div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Platform Module Health</div><div class="card-sub">6 proprietary AI modules · Real-time status</div></div></div>
+      <div id="modules-list"></div>
+    </div>
+  </div>
+
+  <div class="g17">
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">DNA Fingerprint Library — Prompt Chain Performance</div><div class="card-sub">Live logic scores · Runs, hallucination rate and trend</div></div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>Chain Name</th><th>Score</th><th>Runs</th><th>Hallu%</th><th>Trend</th></tr></thead><tbody id="chains-tbody"></tbody></table></div>
+      <div class="g3" style="margin-top:12px;gap:8px">
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;text-transform:uppercase;font-weight:600;margin-bottom:2px">Avg DNA Score</div><div style="font-size:17px;font-weight:900;color:#7C3AED">90.2</div></div>
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;text-transform:uppercase;font-weight:600;margin-bottom:2px">Total Runs</div><div style="font-size:17px;font-weight:900;color:#9333EA">5,526</div></div>
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;text-transform:uppercase;font-weight:600;margin-bottom:2px">Avg Hallu</div><div style="font-size:17px;font-weight:900;color:#10B981">1.13%</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Weekly Workflow Activity</div><div class="card-sub">Runs and saves by day</div></div></div>
+      <div class="chart-w" style="height:195px"><canvas id="weeklyChart"></canvas></div>
+      <div style="margin-top:10px">
+        <div style="display:flex;gap:8px;font-size:11px;margin-bottom:3px"><span style="color:#7C3AED;font-weight:700;min-width:80px">Peak Day:</span><span style="color:#374151">Friday · 82 workflows</span></div>
+        <div style="display:flex;gap:8px;font-size:11px;margin-bottom:3px"><span style="color:#7C3AED;font-weight:700;min-width:80px">Best Saves:</span><span style="color:#374151">Friday · 156 saves</span></div>
+        <div style="display:flex;gap:8px;font-size:11px"><span style="color:#7C3AED;font-weight:700;min-width:80px">Weekend:</span><span style="color:#374151">19–28 workflows steady</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Logic Equity Growth</div><div class="card-sub">Captured vs knowledge loss (GBP)</div></div></div>
+      <div class="chart-w" style="height:170px"><canvas id="equityChart"></canvas></div>
+      <div class="info-note" style="margin-top:8px">📈 GBP 44,800 captured · Loss down 66% since Jan</div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">OLM Training and P&amp;L Links</div><div class="card-sub">Training depth and revenue impact per chain</div></div></div>
+      <div id="olm-list"></div>
+      <div class="info-note" style="background:#ECFDF5;color:#065F46;margin-top:10px">🧠 GBP 6,770/mo attributed via OLM P&amp;L linkage</div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Client Pipeline</div><div class="card-sub">UK professional firm onboarding status</div></div></div>
+      <div id="client-list"></div>
+      <div class="g3" style="margin-top:10px;gap:6px">
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;font-weight:600;text-transform:uppercase">Active MRR</div><div style="font-size:13px;font-weight:900;color:#10B981;margin-top:2px">GBP 630/mo</div></div>
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;font-weight:600;text-transform:uppercase">Onboarding</div><div style="font-size:13px;font-weight:900;color:#3B82F6;margin-top:2px">1 firm</div></div>
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;font-weight:600;text-transform:uppercase">Pipeline</div><div style="font-size:13px;font-weight:900;color:#7C3AED;margin-top:2px">GBP 1,110</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g131">
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">UK Regional Strategy</div><div class="card-sub">Phase-wise geographic rollout</div></div></div>
+      <div id="regions-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">3-Year Revenue, Gross and Net Profit</div><div class="card-sub">All SaaS and implementation streams</div></div></div>
+      <div class="chart-w" style="height:210px"><canvas id="revChart"></canvas></div>
+      <div class="g3" style="margin-top:10px;gap:8px">
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;text-transform:uppercase;font-weight:600">Y1</div><div style="font-size:13px;font-weight:900;color:#C4B5FD;margin-top:2px">GBP 97.8K</div></div>
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;text-transform:uppercase;font-weight:600">Y2</div><div style="font-size:13px;font-weight:900;color:#7C3AED;margin-top:2px">GBP 445.9K</div></div>
+        <div class="stat-box"><div style="font-size:9px;color:#9CA3AF;text-transform:uppercase;font-weight:600">Y3</div><div style="font-size:13px;font-weight:900;color:#4C1D95;margin-top:2px">GBP 906K</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Top Improvement Areas</div><div class="card-sub">UK survey · 182 respondents</div></div></div>
+      <div id="survey-list"></div>
+    </div>
+  </div>
+
+  <div class="g4 g4-mob2">
+    <div class="card"><div class="card-hd"><div class="card-title">Plan Mix</div></div><div class="chart-w" style="height:160px"><canvas id="planPie"></canvas></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Adoption Curve Y1</div></div><div class="chart-w" style="height:160px"><canvas id="adoptChart"></canvas></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Profit Margins (%)</div></div><div class="chart-w" style="height:160px"><canvas id="marginsChart"></canvas></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Return on Equity (%)</div></div><div class="chart-w" style="height:160px"><canvas id="roeChart"></canvas></div></div>
+  </div>
+
+  <div class="g113">
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Founder Product Market Fit</div><div class="card-sub">Naveen · CTO and CEO · London</div></div></div>
+      <div style="display:flex;gap:12px;margin-bottom:14px;align-items:center">
+        <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#4C1D95);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900">N</div>
+        <div><div style="font-size:13px;font-weight:900;color:#1E1B4B">Bathula Sai Mutya Naveen</div><div style="font-size:11px;color:#7C3AED;font-weight:700">Founder and CEO · LLMOps Architect</div><div style="font-size:11px;color:#6B7280">3+ years Data Analytics and ML</div></div>
+      </div>
+      <div id="founder-skills"></div>
+      <div class="info-note" style="margin-top:11px">🏆 Infinity Prompt Chrome Extension · MarkCaption.ai · 85% validation accuracy</div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">The GBP 50B AI Value Gap</div><div class="card-sub">UK SME market crisis PromptOps AI solves</div></div></div>
+      <div style="text-align:center;padding:14px 0 10px"><div style="font-size:38px;font-weight:900;line-height:1;background:linear-gradient(135deg,#7C3AED,#EF4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent">GBP 50B</div><div style="font-size:12px;color:#6B7280;margin-top:3px">Annual global losses from AI hallucinations</div></div>
+      <div id="aivalgap-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div><div class="card-title">Pilot Programme Results</div><div class="card-sub">8 weeks · 5 UK firms · 1,200 interactions</div></div></div>
+      <div class="g2" style="gap:8px;margin-bottom:12px" id="pilot-grid"></div>
+      <div class="quote-box">"We don't just automate workflows — we decode them, evolve them, and elevate your business." — Naveen</div>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCIALS -->
+<div id="tab-financials" class="tab-pane">
+  <div><div style="font-size:22px;font-weight:900;color:#1E1B4B">Financial Plan and Projections</div><div style="font-size:13px;color:#6B7280;margin-top:4px">3-year P&amp;L, cash flow, balance sheet and key ratios · Initial capital GBP 50,000</div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="yr-btn active" onclick="switchYr('Y1',this)">Year 1 Soft Launch</button>
+    <button class="yr-btn" onclick="switchYr('Y2',this)">Year 2 UK Expansion</button>
+    <button class="yr-btn" onclick="switchYr('Y3',this)">Year 3 Scale</button>
+  </div>
+  <div class="g5 g4-mob2" id="fin-kpis"></div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Revenue Stream Breakdown (GBP)</div></div><div class="chart-w" style="height:230px"><canvas id="streamsChart"></canvas></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Cash Flow Position (GBP)</div></div><div class="chart-w" style="height:230px"><canvas id="cashChart"></canvas></div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Operating Expenses by Category (GBP)</div></div><div class="chart-w" style="height:200px"><canvas id="opexChart"></canvas></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Startup Budget Allocation (GBP 50,000)</div></div><div class="chart-w" style="height:200px"><canvas id="budgetChart"></canvas></div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Key Financial Ratios — Full 3-Year View</div></div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>Metric</th><th style="text-align:center">Year 1</th><th style="text-align:center">Year 2</th><th style="text-align:center">Year 3</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;color:#1E1B4B">Revenue</td><td style="text-align:center">GBP 97,820</td><td style="text-align:center">GBP 445,905</td><td style="text-align:center;font-weight:800">GBP 905,980</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Gross Profit</td><td style="text-align:center">GBP 39,247</td><td style="text-align:center">GBP 209,978</td><td style="text-align:center;font-weight:800">GBP 430,738</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Net Profit</td><td style="text-align:center">GBP 11,225</td><td style="text-align:center">GBP 123,134</td><td style="text-align:center;font-weight:800">GBP 275,203</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Gross Margin</td><td style="text-align:center">40.12%</td><td style="text-align:center">47.09%</td><td style="text-align:center;font-weight:800">47.54%</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Net Margin</td><td style="text-align:center">11.48%</td><td style="text-align:center">27.61%</td><td style="text-align:center;font-weight:800">30.38%</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">ROE / ROA</td><td style="text-align:center">18.33%</td><td style="text-align:center">66.79%</td><td style="text-align:center;font-weight:800">59.88%</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Total Assets</td><td style="text-align:center">GBP 61,225</td><td style="text-align:center">GBP 184,359</td><td style="text-align:center;font-weight:800">GBP 459,562</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Revenue Growth</td><td style="text-align:center;color:#9CA3AF">—</td><td style="text-align:center;color:#10B981">+355.84%</td><td style="text-align:center;font-weight:800;color:#10B981">+103.18%</td></tr>
+        <tr><td style="font-weight:700;color:#1E1B4B">Cash Growth</td><td style="text-align:center;color:#9CA3AF">—</td><td style="text-align:center;color:#10B981">+317%</td><td style="text-align:center;font-weight:800;color:#10B981">+168%</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- MARKET -->
+<div id="tab-market" class="tab-pane">
+  <div><div style="font-size:22px;font-weight:900;color:#1E1B4B">Market Research and Validation</div><div style="font-size:13px;color:#6B7280;margin-top:4px">UK professional services opportunity, survey data and pilot results</div></div>
+  <div class="g4 g4-mob2">
+    <div class="card" style="border:2px solid #7C3AED33"><div style="font-size:22px;color:#7C3AED">🌐</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;margin-top:8px;margin-bottom:3px">Global GenAI 2030</div><div style="font-size:22px;font-weight:900;color:#7C3AED">USD 14.03B</div><div style="font-size:11px;color:#6B7280;margin-top:3px">27.1% CAGR</div></div>
+    <div class="card" style="border:2px solid #9333EA33"><div style="font-size:22px;color:#9333EA">📍</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;margin-top:8px;margin-bottom:3px">UK GenAI Market 2025</div><div style="font-size:22px;font-weight:900;color:#9333EA">USD 563.3M</div><div style="font-size:11px;color:#6B7280;margin-top:3px">16.16% CAGR to 2034</div></div>
+    <div class="card" style="border:2px solid #EF444433"><div style="font-size:22px;color:#EF4444">⚠️</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;margin-top:8px;margin-bottom:3px">AI Value Gap</div><div style="font-size:22px;font-weight:900;color:#EF4444">GBP 50B</div><div style="font-size:11px;color:#6B7280;margin-top:3px">Annual global losses</div></div>
+    <div class="card" style="border:2px solid #10B98133"><div style="font-size:22px;color:#10B981">🏢</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;margin-top:8px;margin-bottom:3px">Core UK SAM</div><div style="font-size:22px;font-weight:900;color:#10B981">5–6K</div><div style="font-size:11px;color:#6B7280;margin-top:3px">High-frequency pro brands</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">The AI Value Gap — UK SME Reality</div></div><div id="mkt-aivalgap"></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Survey Interest Levels (182 Respondents)</div></div><div id="mkt-survey"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Pilot Programme Results — 8 Weeks · 5 UK Professional Firms · 1,200 Interactions</div></div>
+    <div class="g4 g4-mob2">
+      <div style="text-align:center;padding:18px;background:#F5F3FF;border-radius:12px;border:2px solid #7C3AED33"><div style="font-size:28px;margin-bottom:8px">⚡</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px">Task Speed Increase</div><div style="font-size:28px;font-weight:900;color:#7C3AED">28%</div><div style="font-size:11px;color:#6B7280;margin-top:5px">22-35% range</div></div>
+      <div style="text-align:center;padding:18px;background:#F5F3FF;border-radius:12px;border:2px solid #9333EA33"><div style="font-size:28px;margin-bottom:8px">🧠</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px">Hallucination Reduction</div><div style="font-size:28px;font-weight:900;color:#9333EA">18%</div><div style="font-size:11px;color:#6B7280;margin-top:5px">1,200 interactions</div></div>
+      <div style="text-align:center;padding:18px;background:#F5F3FF;border-radius:12px;border:2px solid #10B98133"><div style="font-size:28px;margin-bottom:8px">🚀</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px">Hire Proficiency</div><div style="font-size:28px;font-weight:900;color:#10B981">14 days</div><div style="font-size:11px;color:#6B7280;margin-top:5px">vs 45-day average</div></div>
+      <div style="text-align:center;padding:18px;background:#F5F3FF;border-radius:12px;border:2px solid #F59E0B33"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px">Satisfaction Score</div><div style="font-size:28px;font-weight:900;color:#F59E0B">4.3/5</div><div style="font-size:11px;color:#6B7280;margin-top:5px">Logic Equity value</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- OPERATIONS -->
+<div id="tab-operations" class="tab-pane">
+  <div><div style="font-size:22px;font-weight:900;color:#1E1B4B">Operational Scaling and Growth Strategy</div><div style="font-size:13px;color:#6B7280;margin-top:4px">Phase-wise hiring, GTM, partnerships and ESG commitments</div></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Growth Phase Timeline · Year 1 to Year 5</div></div>
+    <div class="g4 g4-mob2">
+      <div class="phase-card"><div class="phase-circle" style="background:#7C3AED">1</div><div style="font-size:13px;font-weight:800;color:#1E1B4B">Phase 1</div><div style="font-size:11px;color:#7C3AED;font-weight:700;margin-bottom:4px">Year 1</div><div style="font-size:12px;color:#374151;margin-bottom:3px">London Soft Launch</div><div style="font-size:11px;color:#7C3AED;font-weight:600">👥 2 staff</div><div style="font-size:11px;color:#6B7280;margin-top:2px">5-10 pilot firms</div></div>
+      <div class="phase-card"><div class="phase-circle" style="background:#9333EA">2</div><div style="font-size:13px;font-weight:800;color:#1E1B4B">Phase 2</div><div style="font-size:11px;color:#9333EA;font-weight:700;margin-bottom:4px">Year 2</div><div style="font-size:12px;color:#374151;margin-bottom:3px">Full UK Launch</div><div style="font-size:11px;color:#9333EA;font-weight:600">👥 5 staff</div><div style="font-size:11px;color:#6B7280;margin-top:2px">50-100 agencies</div></div>
+      <div class="phase-card"><div class="phase-circle" style="background:#6D28D9">3</div><div style="font-size:13px;font-weight:800;color:#1E1B4B">Phase 3</div><div style="font-size:11px;color:#6D28D9;font-weight:700;margin-bottom:4px">Year 3</div><div style="font-size:12px;color:#374151;margin-bottom:3px">National + EU Pilots</div><div style="font-size:11px;color:#6D28D9;font-weight:600">👥 10 staff</div><div style="font-size:11px;color:#6B7280;margin-top:2px">200+ UK firms</div></div>
+      <div class="phase-card"><div class="phase-circle" style="background:#4C1D95">4</div><div style="font-size:13px;font-weight:800;color:#1E1B4B">Phase 4-5</div><div style="font-size:11px;color:#4C1D95;font-weight:700;margin-bottom:4px">Y4-Y5</div><div style="font-size:12px;color:#374151;margin-bottom:3px">International Scale</div><div style="font-size:11px;color:#4C1D95;font-weight:600">👥 20 staff</div><div style="font-size:11px;color:#6B7280;margin-top:2px">500+ globally</div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Headcount Growth Plan</div></div><div class="chart-w" style="height:180px"><canvas id="hiringChart"></canvas></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">GTM Pricing Tiers</div></div><div id="pricing-list"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Sustainability and ESG Commitments</div></div>
+    <div class="g3">
+      <div style="padding:16px;background:#F9FAFB;border-radius:12px;border:2px solid #10B98133"><div style="font-size:22px;color:#10B981">🌲</div><div style="font-size:13px;font-weight:800;color:#10B981;margin:10px 0">Environmental</div><ul style="padding:0 0 0 14px"><li style="font-size:12px;color:#374151;margin-bottom:5px">20-30% digital waste reduction per firm</li><li style="font-size:12px;color:#374151;margin-bottom:5px">Prompt deduplication reduces compute cycles</li><li style="font-size:12px;color:#374151;margin-bottom:5px">Multi-model routing cuts LLM carbon footprint</li></ul></div>
+      <div style="padding:16px;background:#F9FAFB;border-radius:12px;border:2px solid #7C3AED33"><div style="font-size:22px;color:#7C3AED">🤝</div><div style="font-size:13px;font-weight:800;color:#7C3AED;margin:10px 0">Social</div><ul style="padding:0 0 0 14px"><li style="font-size:12px;color:#374151;margin-bottom:5px">Democratises Knowledge Equity for UK SMEs</li><li style="font-size:12px;color:#374151;margin-bottom:5px">Protects institutional memory at turnover</li><li style="font-size:12px;color:#374151;margin-bottom:5px">Creates 20+ UK-based jobs by Year 5</li></ul></div>
+      <div style="padding:16px;background:#F9FAFB;border-radius:12px;border:2px solid #F59E0B33"><div style="font-size:22px;color:#F59E0B">⚖️</div><div style="font-size:13px;font-weight:800;color:#F59E0B;margin:10px 0">Governance</div><ul style="padding:0 0 0 14px"><li style="font-size:12px;color:#374151;margin-bottom:5px">UK Principles-Based AI Framework compliant</li><li style="font-size:12px;color:#374151;margin-bottom:5px">UK GDPR and ICO guidance adherence</li><li style="font-size:12px;color:#374151;margin-bottom:5px">Audit-ready forensic reporting from Day 1</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPETITORS -->
+<div id="tab-competitors" class="tab-pane">
+  <div><div style="font-size:22px;font-weight:900;color:#1E1B4B">Competitive Intelligence</div><div style="font-size:13px;color:#6B7280;margin-top:4px">Strategic white space analysis vs. key market incumbents</div></div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Capability Radar — PromptOps AI vs Competitors</div></div><div class="chart-w" style="height:270px"><canvas id="radarChart"></canvas></div></div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Strategic White Space — Feature Matrix</div></div>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:6px 10px;background:#F5F3FF;border-radius:7px;font-size:10px;font-weight:800;color:#4C1D95;margin-bottom:6px"><span>Feature</span><span style="text-align:center;color:#7C3AED">PromptOps</span><span style="text-align:center">OpenAI</span><span style="text-align:center">Prompt.</span><span style="text-align:center">Zapier</span></div>
+      <div id="feature-matrix"></div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="card" style="border:2px solid #6B728033"><div style="font-size:13px;font-weight:900;color:#1E1B4B;margin-bottom:6px">OpenAI / Claude Enterprise</div><div style="margin-bottom:11px"><span class="tag" style="background:#6B728022;color:#6B7280;border:1px solid #6B728033">Platform Native</span></div><div style="font-size:11px;font-weight:800;color:#10B981;margin-bottom:5px">Strengths</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Strong NLG and compute power</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Broad language capabilities</div><div style="font-size:11px;color:#374151;margin-bottom:8px">▸ Enterprise integrations</div><div style="font-size:11px;font-weight:800;color:#EF4444;margin-bottom:5px">Gaps vs PromptOps AI</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ No intent-to-outcome attribution</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Logic lost on staff turnover</div><div style="font-size:11px;color:#374151">▸ Not UK-SME optimised</div></div>
+    <div class="card" style="border:2px solid #F59E0B33"><div style="font-size:13px;font-weight:900;color:#1E1B4B;margin-bottom:6px">PromptPerfect / AIPRM</div><div style="margin-bottom:11px"><span class="tag" style="background:#F59E0B22;color:#F59E0B;border:1px solid #F59E0B33">Prompt Management</span></div><div style="font-size:11px;font-weight:800;color:#10B981;margin-bottom:5px">Strengths</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Automated prompt optimisation</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Template libraries</div><div style="font-size:11px;color:#374151;margin-bottom:8px">▸ Ease of use</div><div style="font-size:11px;font-weight:800;color:#EF4444;margin-bottom:5px">Gaps vs PromptOps AI</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Total outcome silo</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ No failure forensics</div><div style="font-size:11px;color:#374151">▸ No P&amp;L linkage</div></div>
+    <div class="card" style="border:2px solid #10B98133"><div style="font-size:13px;font-weight:900;color:#1E1B4B;margin-bottom:6px">Zapier / Make.com</div><div style="margin-bottom:11px"><span class="tag" style="background:#10B98122;color:#10B981;border:1px solid #10B98133">Workflow Automation</span></div><div style="font-size:11px;font-weight:800;color:#10B981;margin-bottom:5px">Strengths</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Strong app connectivity</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Extensive integrations</div><div style="font-size:11px;color:#374151;margin-bottom:8px">▸ Easy triggers</div><div style="font-size:11px;font-weight:800;color:#EF4444;margin-bottom:5px">Gaps vs PromptOps AI</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ Zero intelligence layer</div><div style="font-size:11px;color:#374151;margin-bottom:3px">▸ No AI quality check</div><div style="font-size:11px;color:#374151">▸ No behavioural DNA</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">PromptOps AI Layered Defensive Moat — Why Competitors Cannot Replicate</div></div>
+    <div class="g4 g4-mob2">
+      <div class="moat-card"><div style="font-size:22px;color:#7C3AED;margin-bottom:8px">🗄️</div><span class="tag" style="background:#7C3AED22;color:#7C3AED;border:1px solid #7C3AED33">Data Moat</span><div style="font-size:13px;font-weight:800;color:#1E1B4B;margin:9px 0 7px">UK-Trained Data</div><div style="font-size:11px;color:#6B7280;line-height:1.5">ML trained on British service-sector standards, GDPR/ICO, UK norms.</div></div>
+      <div class="moat-card"><div style="font-size:22px;color:#9333EA;margin-bottom:8px">🔀</div><span class="tag" style="background:#9333EA22;color:#9333EA;border:1px solid #9333EA33">Technical Moat</span><div style="font-size:13px;font-weight:800;color:#1E1B4B;margin:9px 0 7px">Closed-Loop Pipeline</div><div style="font-size:11px;color:#6B7280;line-height:1.5">Unifies user intent, multi-step execution and commercial outcomes.</div></div>
+      <div class="moat-card"><div style="font-size:22px;color:#6D28D9;margin-bottom:8px">🏆</div><span class="tag" style="background:#6D28D922;color:#6D28D9;border:1px solid #6D28D933">IP Moat</span><div style="font-size:13px;font-weight:800;color:#1E1B4B;margin:9px 0 7px">Logic Equity Frameworks</div><div style="font-size:11px;color:#6B7280;line-height:1.5">Real-time Logic Equity transforming AI into proprietary org assets with P&amp;L linkage.</div></div>
+      <div class="moat-card"><div style="font-size:22px;color:#4C1D95;margin-bottom:8px">🕸️</div><span class="tag" style="background:#4C1D9522;color:#4C1D95;border:1px solid #4C1D9533">Network Moat</span><div style="font-size:13px;font-weight:800;color:#1E1B4B;margin:9px 0 7px">Community Logic Network</div><div style="font-size:11px;color:#6B7280;line-height:1.5">Federated learning pools anonymized Workflow DNA from thousands of UK SMEs.</div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div style="max-width:1480px;margin:0 auto">
+    <div class="footer-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#A78BFA,#7C3AED);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px">P</div>
+          <div><div style="color:#fff;font-weight:900;font-size:15px">PromptOps AI</div><div style="color:#9F7AEA;font-size:9px;letter-spacing:0.1em;text-transform:uppercase">Design · Optimize · Automate · Elevate</div></div>
+        </div>
+        <p style="color:#A78BFA;font-size:12px;line-height:1.7;margin:0 0 12px">Engineering the DNA of Intelligence. Transforming fragmented AI interactions into proprietary Workflow Assets for UK professional SMEs. Targeting the GBP 50B AI Value Gap.</p>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="tag" style="background:#A78BFA22;color:#A78BFA;border:1px solid #A78BFA33">UK GDPR Compliant</span>
+          <span class="tag" style="background:#A78BFA22;color:#A78BFA;border:1px solid #A78BFA33">ICO Registered</span>
+          <span class="tag" style="background:#A78BFA22;color:#A78BFA;border:1px solid #A78BFA33">Principles-Based AI</span>
+          <span class="tag" style="background:#A78BFA22;color:#A78BFA;border:1px solid #A78BFA33">Pro-Innovation</span>
+        </div>
+        <div style="font-size:12px;color:#E9D5FF"><span style="color:#C4B5FD;font-weight:700">Founder: </span>Bathula Sai Mutya Naveen · London, UK · 2026</div>
+      </div>
+      <div><div style="color:#E9D5FF;font-weight:800;font-size:11px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.07em">Platform</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Logic Core – GBP 100/mo</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">DNA Architect – GBP 380/mo</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Logic Sovereign – GBP 250/mo</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">DNA Onboarding – GBP 500</div><div style="color:#A78BFA;font-size:12px">Forensic Health – GBP 550</div></div>
+      <div><div style="color:#E9D5FF;font-weight:800;font-size:11px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.07em">Technology</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">AI Fingerprinting Engine</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Prompt Failure Forensics</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Outcome-Learning Memory</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Chain Twin Simulation</div><div style="color:#A78BFA;font-size:12px">Community Logic Network</div></div>
+      <div><div style="color:#E9D5FF;font-weight:800;font-size:11px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.07em">Company</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Sector: Enterprise SaaS / AI</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Founded: 2026 London</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Target: UK IT and Consulting</div><div style="color:#A78BFA;font-size:12px;margin-bottom:7px">Phase 1: Soft Launch</div><div style="color:#A78BFA;font-size:12px">Phase 3+: EU Expansion</div></div>
+    </div>
+    <div style="border-top:1px solid rgba(167,139,250,0.2);padding-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div style="color:#6B5B95;font-size:11px">© 2026 PromptOps AI · All rights reserved · UK-Focused · SME-Powered · Logic-Sovereign</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap"><span style="color:#C4B5FD;font-size:11px;font-weight:700">Y1: GBP 97,820</span><span style="color:#C4B5FD;font-size:11px;font-weight:700">Y2: GBP 445,905</span><span style="color:#C4B5FD;font-size:11px;font-weight:700">Y3: GBP 905,980</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══ DATA ═══════════════════════════════════════════════════
+const REV=[{y:"Y1",rev:97820,gp:39247,np:11225},{y:"Y2",rev:445905,gp:209978,np:123134},{y:"Y3",rev:905980,gp:430738,np:275203}];
+const CASH=[{y:"Y1",cash:39625,inflow:9024},{y:"Y2",cash:165159,inflow:125534},{y:"Y3",cash:442762,inflow:277603}];
+const STREAMS=[{n:"Logic Core",y1:13400,y2:51600,y3:105600},{n:"DNA Architect",y1:50920,y2:196080,y3:401280},{n:"Sovereign",y1:16750,y2:64500,y3:132000},{n:"Onboarding",y1:16750,y2:98250,y3:194500},{n:"Forensic Hlth",y1:0,y2:35475,y3:72600}];
+const PLANS=[{name:"DNA Architect",value:40,color:"#7C3AED"},{name:"Logic Core",value:40,color:"#A78BFA"},{name:"Logic Sovereign",value:20,color:"#4C1D95"}];
+const ADOPT=[{m:"M4",u:5},{m:"M6",u:15},{m:"M8",u:35},{m:"M10",u:60},{m:"M12",u:75}];
+const MARGINS=[{y:"Y1",gm:40.12,nm:11.48},{y:"Y2",gm:47.09,nm:27.61},{y:"Y3",gm:47.54,nm:30.38}];
+const BUDGET=[{n:"Product Dev",v:36,amt:18000,c:"#4C1D95"},{n:"Freelance",v:24,amt:12000,c:"#7C3AED"},{n:"Marketing",v:14,amt:7000,c:"#9333EA"},{n:"Legal & IP",v:10,amt:5000,c:"#A855F7"},{n:"Logic Nodes",v:12,amt:6000,c:"#C084FC"},{n:"Contingency",v:4,amt:2000,c:"#DDD6FE"}];
+const OPEX=[{c:"R&D",y1:6000,y2:20000,y3:25000},{c:"Marketing",y1:6000,y2:14000,y3:20000},{c:"Software",y1:1200,y2:2500,y3:4000},{c:"Legal",y1:1500,y2:3200,y3:3600},{c:"Office",y1:600,y2:1300,y3:6000},{c:"Insurance",y1:1200,y2:2400,y3:2800}];
+const EQUITY=[{m:"Jan",eq:12400,loss:3200},{m:"Feb",eq:18900,loss:2800},{m:"Mar",eq:26700,loss:2100},{m:"Apr",eq:35200,loss:1600},{m:"May",eq:44800,loss:1100}];
+const WEEK=[{d:"Mon",wf:48,sv:89},{d:"Tue",wf:61,sv:102},{d:"Wed",wf:74,sv:134},{d:"Thu",wf:55,sv:97},{d:"Fri",wf:82,sv:156},{d:"Sat",wf:28,sv:41},{d:"Sun",wf:19,sv:28}];
+const OLM=[{ch:"Candidate Outreach",tr:89,ac:94,pl:"+GBP 2,340/mo"},{ch:"Legal Compliance",tr:76,ac:97,pl:"+GBP 1,890/mo"},{ch:"Report Auto-Draft",tr:64,ac:89,pl:"+GBP 1,120/mo"},{ch:"SEO Content Chain",tr:52,ac:91,pl:"+GBP 780/mo"},{ch:"Invoice Extraction",tr:41,ac:82,pl:"+GBP 640/mo"}];
+const CHAINS=[{id:"PC-001",name:"Candidate Outreach Sequence",score:94,runs:1240,hallu:0.8,trend:"+12%"},{id:"PC-002",name:"Client Report Auto-Draft",score:89,runs:876,hallu:1.2,trend:"+8%"},{id:"PC-003",name:"Legal Compliance Checker",score:97,runs:540,hallu:0.3,trend:"+21%"},{id:"PC-004",name:"Invoice & Data Extraction",score:82,runs:1890,hallu:2.1,trend:"-3%"},{id:"PC-005",name:"SEO Content Chain",score:91,runs:670,hallu:0.9,trend:"+15%"},{id:"PC-006",name:"Onboarding Logic Cloner",score:88,runs:310,hallu:1.5,trend:"+6%"}];
+const MODS=[{name:"AI Fingerprinting Engine",st:"ACTIVE",up:"99.8%",ld:72,c:"#10B981"},{name:"Prompt Failure Forensics (PFFE)",st:"ACTIVE",up:"99.9%",ld:45,c:"#10B981"},{name:"Outcome-Learning Memory (OLM)",st:"TRAINING",up:"99.4%",ld:88,c:"#F59E0B"},{name:"Intent to Workflow Auto-Synth",st:"ACTIVE",up:"99.7%",ld:61,c:"#10B981"},{name:"Chain Twin Simulation",st:"IDLE",up:"100%",ld:12,c:"#6B7280"},{name:"Community Logic Network (CLN)",st:"SYNCING",up:"98.9%",ld:34,c:"#3B82F6"}];
+const CLIENTS=[{firm:"TechFlow Consulting Ltd",stage:"ACTIVE",plan:"DNA Architect",val:"GBP 380/mo",h:94},{firm:"Apex Recruitment Group",stage:"ACTIVE",plan:"Logic Sovereign",val:"GBP 250/mo",h:87},{firm:"NorthBridge IT Services",stage:"ONBOARDING",plan:"DNA Architect",val:"GBP 380/mo",h:72},{firm:"Veritas Legal Support LLP",stage:"PILOT",plan:"Logic Core",val:"GBP 100/mo",h:65},{firm:"Quantum Digital Agency",stage:"NEGOTIATING",plan:"DNA Architect",val:"GBP 380/mo",h:null},{firm:"Meridian Analytics Co",stage:"LEAD",plan:"Logic Core",val:"GBP 100/mo",h:null}];
+const REGIONS=[{r:"London",pct:51.7,firms:78,st:"Primary Launch",c:"#7C3AED"},{r:"South East",pct:16.1,firms:24,st:"Phase 2 Target",c:"#9333EA"},{r:"North West",pct:8.0,firms:12,st:"Year 2 Expansion",c:"#A855F7"},{r:"West Midlands",pct:6.2,firms:9,st:"Year 2 Expansion",c:"#C084FC"},{r:"Scotland",pct:7.0,firms:7,st:"Phase 3 CLN",c:"#C4B5FD"},{r:"Wales & NI",pct:4.0,firms:4,st:"Phase 3 CLN",c:"#DDD6FE"}];
+const SURVEY=[{l:"Save & Reuse Workflows",v:91.2},{l:"Auto-Improve Prompts",v:89.9},{l:"Workflow Analytics",v:83.0},{l:"Platform Adoption Likely",v:85.2},{l:"Pilot Interest",v:87.3}];
+
+// ═══ HELPERS ════════════════════════════════════════════════
+const fmt=n=>n>=1e6?`GBP ${(n/1e6).toFixed(2)}M`:n>=1000?`GBP ${(n/1000).toFixed(0)}K`:`GBP ${n}`;
+const mbar=(v,max,c,h=6)=>`<div style="height:${h}px;background:#EDE9FE;border-radius:3px;overflow:hidden;margin:2px 0"><div style="height:100%;width:${Math.min((v/max)*100,100)}%;background:${c};border-radius:3px"></div></div>`;
+const tag=(txt,c)=>`<span class="tag" style="background:${c}22;color:${c};border:1px solid ${c}33">${txt}</span>`;
+
+// ═══ RENDER DOM ═════════════════════════════════════════════
+
+// ALERTS
+const alertsData=[
+  {id:"AL-047",sev:"HIGH",chain:"Invoice & Data Extraction",type:"Context Drift",time:"2m",done:false},
+  {id:"AL-046",sev:"MEDIUM",chain:"SEO Content Chain",type:"Tone Inconsistency",time:"18m",done:false},
+  {id:"AL-045",sev:"LOW",chain:"Client Report Auto-Draft",type:"Format Deviation",time:"1h",done:true},
+  {id:"AL-044",sev:"HIGH",chain:"Invoice & Data Extraction",type:"Hallucination",time:"3h",done:true},
+  {id:"AL-043",sev:"MEDIUM",chain:"Candidate Outreach Sequence",type:"Logic Break",time:"5h",done:true}
+];
+document.getElementById('alerts-list').innerHTML=alertsData.map(a=>{
+  const c=a.done?'#9CA3AF':a.sev==='HIGH'?'#EF4444':a.sev==='MEDIUM'?'#F59E0B':'#3B82F6';
+  const icon=a.done?'✓':a.sev==='HIGH'?'⚠':'●';
+  return`<div style="display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;background:${a.done?'#F9FAFB':'#FFF5F5'};border:1px solid ${a.done?'#E5E7EB':c}44;margin-bottom:7px;opacity:${a.done?0.65:1}">
+    <span style="color:${c};font-size:14px;flex-shrink:0">${icon}</span>
+    <div style="flex:1"><div style="font-size:12px;font-weight:700;color:#1E1B4B">${a.chain}</div><div style="font-size:10px;color:#6B7280">${a.type} · ${a.time} ago</div></div>
+    ${tag(a.done?'RESOLVED':a.sev,c)}
+    <span style="font-size:9px;color:#9CA3AF;font-family:monospace">${a.id}</span>
+  </div>`;
+}).join('');
+
+// MODULES
+document.getElementById('modules-list').innerHTML=MODS.map(m=>`
+  <div style="padding:8px 10px;background:#F9FAFB;border-radius:9px;border:1px solid #EDE9FE;margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-size:11px;font-weight:700;color:#1E1B4B">${m.name}</div>
+      ${tag(m.st,m.c)}
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="flex:1">${mbar(m.ld,100,m.c,4)}</div>
+      <span style="font-size:10px;color:#9CA3AF;white-space:nowrap">${m.ld}% · ${m.up}</span>
+    </div>
+  </div>`).join('');
+
+// CHAINS
+document.getElementById('chains-tbody').innerHTML=CHAINS.map(c=>{
+  const sc=c.score>=90?'#10B981':c.score>=80?'#F59E0B':'#EF4444';
+  const hc=c.hallu<1?'#10B981':c.hallu<2?'#F59E0B':'#EF4444';
+  return`<tr>
+    <td style="font-family:monospace;font-size:10px;color:#9CA3AF">${c.id}</td>
+    <td style="font-weight:700;color:#1E1B4B;font-size:12px">${c.name}</td>
+    <td><span style="font-weight:900;font-size:13px;color:${sc}">${c.score}</span></td>
+    <td style="color:#374151;font-weight:600">${c.runs.toLocaleString()}</td>
+    <td>${tag(c.hallu+'%',hc)}</td>
+    <td style="font-weight:800;color:${c.trend.startsWith('+')?'#10B981':'#EF4444'}">${c.trend}</td>
+  </tr>`;
+}).join('');
+
+// OLM
+document.getElementById('olm-list').innerHTML=OLM.map(r=>`
+  <div style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+      <span style="font-size:11px;font-weight:700;color:#1E1B4B">${r.ch}</span>
+      <span style="font-size:11px;font-weight:800;color:#10B981">${r.pl}</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="flex:1">${mbar(r.tr,100,'#7C3AED',6)}</div>
+      <span style="font-size:10px;color:#9CA3AF;white-space:nowrap">${r.tr}% · ${r.ac}% acc</span>
+    </div>
+  </div>`).join('');
+
+// CLIENTS
+const stageColor={ACTIVE:'#10B981',ONBOARDING:'#3B82F6',PILOT:'#F59E0B',NEGOTIATING:'#9333EA',LEAD:'#9CA3AF'};
+document.getElementById('client-list').innerHTML=CLIENTS.map(c=>{
+  const sc=stageColor[c.stage];
+  const bg=c.stage==='ACTIVE'?'#ECFDF5':c.stage==='ONBOARDING'?'#EFF6FF':'#F9FAFB';
+  return`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:${bg};border:1px solid ${sc}33;margin-bottom:7px">
+    <div style="width:6px;height:6px;border-radius:50%;background:${sc};flex-shrink:0;box-shadow:0 0 4px ${sc}"></div>
+    <div style="flex:1"><div style="font-size:12px;font-weight:700;color:#1E1B4B">${c.firm}</div><div style="font-size:10px;color:#6B7280">${c.plan}</div></div>
+    ${c.h?`<div style="text-align:center;min-width:30px"><div style="font-size:13px;font-weight:900;color:${c.h>=90?'#10B981':c.h>=70?'#F59E0B':'#EF4444'}">${c.h}</div><div style="font-size:9px;color:#9CA3AF">health</div></div>`:''}
+    <div style="text-align:right"><div style="font-size:11px;font-weight:800;color:#7C3AED">${c.val}</div>${tag(c.stage,sc)}</div>
+  </div>`;
+}).join('');
+
+// REGIONS
+document.getElementById('regions-list').innerHTML=REGIONS.map(r=>`
+  <div style="padding:8px 10px;background:#F9FAFB;border-radius:9px;border:2px solid ${r.c}44;margin-bottom:7px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:12px;font-weight:800;color:#1E1B4B">${r.r}</span>
+      <span style="font-size:12px;font-weight:900;color:${r.c}">${r.pct}%</span>
+    </div>
+    ${mbar(r.pct,55,r.c,5)}
+    <div style="display:flex;justify-content:space-between;margin-top:4px">
+      <span style="font-size:10px;color:#6B7280">${r.firms} firms</span>
+      ${tag(r.st,r.c)}
+    </div>
+  </div>`).join('');
+
+// SURVEY (dashboard)
+const surveyHTML=SURVEY.map(s=>`
+  <div style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:12px;color:#374151;font-weight:600">${s.l}</span>
+      <span style="font-size:12px;font-weight:800;color:#7C3AED">${s.v}%</span>
+    </div>
+    ${mbar(s.v,100,'#7C3AED',8)}
+  </div>`).join('');
+document.getElementById('survey-list').innerHTML=surveyHTML;
+if(document.getElementById('mkt-survey')) document.getElementById('mkt-survey').innerHTML=surveyHTML;
+
+// MARKET AI GAP
+const aivalgapData=[{l:"UK SMEs experimenting with AI",v:85,c:"#7C3AED"},{l:"Successfully integrated into ops",v:29,c:"#EF4444"},{l:"Teams with inconsistent AI",v:70,c:"#F59E0B"},{l:"AI outputs manually checked",v:84,c:"#9333EA"},{l:"SMEs with enterprise-wide plan",v:7,c:"#10B981"}];
+const aivalgapHTML=aivalgapData.map(x=>`
+  <div style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:12px;color:#374151;font-weight:600">${x.l}</span>
+      <span style="font-size:12px;font-weight:800;color:${x.c}">${x.v}%</span>
+    </div>
+    ${mbar(x.v,100,x.c,8)}
+  </div>`).join('');
+document.getElementById('aivalgap-list').innerHTML=aivalgapHTML;
+document.getElementById('mkt-aivalgap').innerHTML=aivalgapHTML;
+
+// FOUNDER SKILLS
+document.getElementById('founder-skills').innerHTML=[
+  {l:"Deep Learning (CNN/LSTM/DistilBERT)",pct:92},{l:"LLM Optimisation and Prompt Engineering",pct:88},
+  {l:"SaaS Architecture and API Bridges",pct:85},{l:"Data Analytics / Python / SQL",pct:90},{l:"Business Strategy and P&L Linkage",pct:80}
+].map(s=>`<div style="margin-bottom:7px">
+  <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+    <span style="font-size:11px;font-weight:600;color:#1E1B4B">${s.l}</span>
+    <span style="font-size:11px;color:#7C3AED;font-weight:700">${s.pct}%</span>
+  </div>
+  ${mbar(s.pct,100,'#7C3AED',5)}
+</div>`).join('');
+
+// PILOT GRID
+document.getElementById('pilot-grid').innerHTML=[
+  {m:"Task Speed",v:"28%",r:"22-35% range",c:"#7C3AED"},
+  {m:"Hallu Reduction",v:"18%",r:"1,200 tested",c:"#9333EA"},
+  {m:"Hire Proficiency",v:"14 days",r:"vs 45-day avg",c:"#10B981"},
+  {m:"Satisfaction",v:"4.3/5",r:"Logic Equity",c:"#F59E0B"},
+  {m:"HubSpot Rating",v:"4.0/5",r:"Integration ease",c:"#3B82F6"},
+  {m:"Firms Impressed",v:"81%",r:"of 150 surveyed",c:"#6D28D9"}
+].map(p=>`<div style="padding:10px;background:#F5F3FF;border-radius:9px;border:1px solid ${p.c}33;text-align:center">
+  <div style="font-size:9px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px">${p.m}</div>
+  <div style="font-size:18px;font-weight:900;color:${p.c}">${p.v}</div>
+  <div style="font-size:10px;color:#6B7280;margin-top:2px">${p.r}</div>
+</div>`).join('');
+
+// PRICING
+document.getElementById('pricing-list').innerHTML=[
+  {tier:"Logic Core",price:"GBP 100/mo",c:"#C4B5FD",bg:"#FAF5FF",d:"Solo founders and boutique agencies"},
+  {tier:"DNA Architect",price:"GBP 380/mo",c:"#7C3AED",bg:"#F5F3FF",d:"High-volume Recruitment and Consulting"},
+  {tier:"Logic Sovereign",price:"GBP 250/mo+vol",c:"#4C1D95",bg:"#EDE9FE",d:"Multi-site agencies and corporate teams"},
+  {tier:"DNA Onboarding",price:"GBP 500 setup",c:"#9333EA",bg:"#FAF5FF",d:"All new firms — API calibration"},
+  {tier:"Forensic Health",price:"GBP 550 once",c:"#6D28D9",bg:"#F5F3FF",d:"Deep-dive DNA audit and team training"}
+].map(p=>`<div style="display:flex;gap:11px;padding:9px 10px;background:${p.bg};border-radius:9px;border:1px solid ${p.c}44;margin-bottom:7px">
+  <div style="min-width:95px"><div style="font-size:11px;font-weight:800;color:${p.c}">${p.tier}</div><div style="font-size:14px;font-weight:900;color:#1E1B4B">${p.price}</div></div>
+  <div style="font-size:11px;color:#6B7280;align-self:center">${p.d}</div>
+</div>`).join('');
+
+// FEATURE MATRIX
+document.getElementById('feature-matrix').innerHTML=[
+  {f:"Closed-Loop Intent to Outcome",po:true,oa:false,pp:false,za:false},
+  {f:"Predictive PFFE Forensics",po:true,oa:false,pp:false,za:false},
+  {f:"UK-Specific Benchmarking",po:true,oa:false,pp:"p",za:false},
+  {f:"Logic Cloning / DNA",po:true,oa:"p",pp:"p",za:false},
+  {f:"Outcome-Learning Memory",po:true,oa:false,pp:false,za:false},
+  {f:"Workflow Equity Analytics",po:true,oa:false,pp:false,za:false},
+  {f:"Federated CLN Network",po:true,oa:false,pp:false,za:false},
+  {f:"P&L Attribution",po:true,oa:false,pp:false,za:false}
+].map(r=>{
+  const ic=v=>v===true?'✓':v==='p'?'Part':'✗';
+  const cc=v=>v===true?'#10B981':v==='p'?'#F59E0B':'#EF4444';
+  return`<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:6px 10px;background:#F9FAFB;border-radius:7px;font-size:11px;margin-bottom:4px">
+    <span style="color:#1E1B4B;font-weight:600">${r.f}</span>
+    <span style="text-align:center;font-weight:700;color:${cc(r.po)}">${ic(r.po)}</span>
+    <span style="text-align:center;font-weight:700;color:${cc(r.oa)}">${ic(r.oa)}</span>
+    <span style="text-align:center;font-weight:700;color:${cc(r.pp)}">${ic(r.pp)}</span>
+    <span style="text-align:center;font-weight:700;color:${cc(r.za)}">${ic(r.za)}</span>
+  </div>`;
+}).join('');
+
+// FINANCIALS KPIs
+function renderFinKpis(yr){
+  const i=['Y1','Y2','Y3'].indexOf(yr),row=REV[i];
+  const opex=[18900,45800,63800][i],tax=[9122,41045,91734][i];
+  document.getElementById('fin-kpis').innerHTML=[
+    {l:"Total Revenue",v:fmt(row.rev),c:"#7C3AED"},{l:"Gross Profit",v:fmt(row.gp),c:"#9333EA"},
+    {l:"Operating Exp",v:fmt(opex),c:"#6B7280"},{l:"Tax on Profit",v:fmt(tax),c:"#EF4444"},{l:"Net Profit",v:fmt(row.np),c:"#10B981"}
+  ].map(k=>`<div class="card" style="border:2px solid ${k.c}22">
+    <div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin:8px 0 4px">${k.l}</div>
+    <div style="font-size:22px;font-weight:900;color:${k.c}">${k.v}</div>
+  </div>`).join('');
+}
+renderFinKpis('Y1');
+
+function switchYr(yr,btn){
+  document.querySelectorAll('.yr-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFinKpis(yr);
+}
+
+// ═══ CHARTS ═════════════════════════════════════════════════
+const F={family:"'Trebuchet MS',Verdana,sans-serif",size:10};
+const gridColor='#EDE9FE';
+
+function mkChart(id,config){
+  const el=document.getElementById(id);
+  if(el) return new Chart(el,config);
+}
+
+mkChart('weeklyChart',{type:'bar',data:{labels:WEEK.map(w=>w.d),datasets:[{label:'Workflows',data:WEEK.map(w=>w.wf),backgroundColor:'#7C3AED',borderRadius:4},{label:'Saves',data:WEEK.map(w=>w.sv),backgroundColor:'#C4B5FD',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F},grid:{color:gridColor}}}}});
+
+mkChart('equityChart',{type:'line',data:{labels:EQUITY.map(e=>e.m),datasets:[{label:'Equity Captured',data:EQUITY.map(e=>e.eq),borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,0.15)',fill:true,tension:0.4,pointRadius:4,borderWidth:2.5},{label:'Logic Loss',data:EQUITY.map(e=>e.loss),borderColor:'#EF4444',backgroundColor:'rgba(239,68,68,0.08)',fill:true,tension:0.4,pointRadius:3,borderWidth:1.5,borderDash:[5,5]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F,callback:v=>`£${(v/1000).toFixed(0)}K`},grid:{color:gridColor}}}}});
+
+mkChart('revChart',{type:'line',data:{labels:REV.map(r=>r.y),datasets:[{label:'Revenue',data:REV.map(r=>r.rev),borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,0.15)',fill:true,tension:0.4,pointRadius:5,borderWidth:2.5},{label:'Gross Profit',data:REV.map(r=>r.gp),borderColor:'#9333EA',backgroundColor:'rgba(147,51,234,0.08)',fill:true,tension:0.4,pointRadius:4,borderWidth:2},{label:'Net Profit',data:REV.map(r=>r.np),borderColor:'#F59E0B',backgroundColor:'transparent',tension:0.4,pointRadius:5,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F,callback:v=>v>=1000?`£${(v/1000).toFixed(0)}K`:v},grid:{color:gridColor}}}}});
+
+mkChart('planPie',{type:'doughnut',data:{labels:PLANS.map(p=>p.name),datasets:[{data:PLANS.map(p=>p.value),backgroundColor:PLANS.map(p=>p.color),hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:"'Trebuchet MS'",size:9}}}}}});
+
+mkChart('adoptChart',{type:'line',data:{labels:ADOPT.map(a=>a.m),datasets:[{label:'Active Brands',data:ADOPT.map(a=>a.u),borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,0.2)',fill:true,tension:0.4,pointRadius:4,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F},grid:{color:gridColor}}}}});
+
+mkChart('marginsChart',{type:'bar',data:{labels:MARGINS.map(m=>m.y),datasets:[{label:'Gross %',data:MARGINS.map(m=>m.gm),backgroundColor:'#7C3AED',borderRadius:4},{label:'Net %',data:MARGINS.map(m=>m.nm),backgroundColor:'#F59E0B',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F,callback:v=>v+'%'},grid:{color:gridColor}}}}});
+
+mkChart('roeChart',{type:'bar',data:{labels:['Y1','Y2','Y3'],datasets:[{label:'ROE %',data:[18.33,66.79,59.88],backgroundColor:['#C4B5FD','#9333EA','#4C1D95'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F,callback:v=>v+'%'},grid:{color:gridColor}}}}});
+
+mkChart('streamsChart',{type:'bar',data:{labels:STREAMS.map(s=>s.n),datasets:[{label:'Year 1',data:STREAMS.map(s=>s.y1),backgroundColor:'#C4B5FD',borderRadius:3},{label:'Year 2',data:STREAMS.map(s=>s.y2),backgroundColor:'#7C3AED',borderRadius:3},{label:'Year 3',data:STREAMS.map(s=>s.y3),backgroundColor:'#4C1D95',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F,callback:v=>v>=1000?`£${(v/1000).toFixed(0)}K`:v},grid:{color:gridColor}}}}});
+
+mkChart('cashChart',{type:'line',data:{labels:CASH.map(c=>c.y),datasets:[{label:'Closing Cash',data:CASH.map(c=>c.cash),borderColor:'#4C1D95',backgroundColor:'rgba(76,29,149,0.15)',fill:true,tension:0.4,pointRadius:5,borderWidth:2.5},{label:'Net Cash Inflow',data:CASH.map(c=>c.inflow),borderColor:'#9333EA',backgroundColor:'transparent',tension:0.4,pointRadius:4,borderWidth:2,borderDash:[5,5]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F,callback:v=>v>=1000?`£${(v/1000).toFixed(0)}K`:v},grid:{color:gridColor}}}}});
+
+mkChart('opexChart',{type:'bar',data:{labels:OPEX.map(o=>o.c),datasets:[{label:'Y1',data:OPEX.map(o=>o.y1),backgroundColor:'#C4B5FD',borderRadius:3},{label:'Y2',data:OPEX.map(o=>o.y2),backgroundColor:'#7C3AED',borderRadius:3},{label:'Y3',data:OPEX.map(o=>o.y3),backgroundColor:'#4C1D95',borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{x:{ticks:{font:F,callback:v=>v>=1000?`£${(v/1000).toFixed(0)}K`:v},grid:{color:gridColor}},y:{ticks:{font:F},grid:{color:gridColor}}}}});
+
+mkChart('budgetChart',{type:'pie',data:{labels:BUDGET.map(b=>b.n),datasets:[{data:BUDGET.map(b=>b.v),backgroundColor:BUDGET.map(b=>b.c),hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:"'Trebuchet MS'",size:9}}}}}});
+
+mkChart('hiringChart',{type:'bar',data:{labels:['Y1','Y2','Y3','Y4-5'],datasets:[{label:'Headcount',data:[2,5,10,20],backgroundColor:['#C4B5FD','#9333EA','#7C3AED','#4C1D95'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:F},grid:{color:gridColor}},y:{ticks:{font:F},grid:{color:gridColor}}}}});
+
+mkChart('radarChart',{type:'radar',data:{
+  labels:["Closed-Loop","PFFE","UK Benchmarks","Logic Cloning","SME Focus","OLM Memory"],
+  datasets:[
+    {label:'PromptOps AI',data:[100,100,100,100,100,100],borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,0.2)',borderWidth:2,pointRadius:3},
+    {label:'OpenAI/Claude',data:[25,0,10,15,20,0],borderColor:'#9CA3AF',backgroundColor:'rgba(156,163,175,0.05)',borderWidth:1.5,pointRadius:2},
+    {label:'PromptPerfect',data:[10,0,30,40,60,0],borderColor:'#F59E0B',backgroundColor:'rgba(245,158,11,0.05)',borderWidth:1.5,pointRadius:2},
+    {label:'Zapier/Make',data:[0,0,0,0,70,0],borderColor:'#10B981',backgroundColor:'rgba(16,185,129,0.05)',borderWidth:1.5,pointRadius:2}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:F}}},scales:{r:{ticks:{display:false},grid:{color:gridColor},pointLabels:{font:{family:"'Trebuchet MS'",size:10}}}}}});
+
+// ═══ TAB SWITCHING ══════════════════════════════════════════
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function switchTabMob(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mobile-menu button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('mobMenu').classList.remove('open');
+  window.scrollTo(0,0);
+}
+function toggleMob(){document.getElementById('mobMenu').classList.toggle('open');}
+
+// ═══ LIVE TICKER ════════════════════════════════════════════
+let tk=0;
+setInterval(()=>{
+  tk=(tk+1)%60;
+  document.getElementById('liveWF').textContent=248+(tk%8);
+  document.getElementById('liveHrs').textContent=(1256+tk*2).toLocaleString()+' hrs';
+},2500);
+</script>
+</body>
+</html>
